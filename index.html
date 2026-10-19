@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Patrick Gorzsás Portfolio.">
+<title>Patrick Gorzsás — Game Programmer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0b0d;
+    --bg-panel:#141619;
+    --text:#fff;
+    --text-muted:#868c96;
+    --accent:#a3c4ff;
+    --accent-dim:rgba(163,196,255,0.38);
+    --accent-faint:rgba(163,196,255,0.1);
+    --line:rgba(255,255,255,0.08);
+    --grad-end:#a3c4ff;
+    --title-size:48px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  /* Hide the page scrollbar (scrolling with wheel, touch and keyboard still works) */
+  html, body{scrollbar-width:none;-ms-overflow-style:none;}
+  html::-webkit-scrollbar, body::-webkit-scrollbar{display:none;}
+  body{
+    background:radial-gradient(0% 60% at 15% -10%, var(--bg-panel) 100%, var(--bg) 100%);
+    color:var(--text);
+    font-family:'DM Sans', sans-serif;
+  }
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px;}
+  .wrap{padding:128px 384px 48px;}
+
+  /* HEADER */
+  header{text-align:center;}
+  /* Gradient (white to light blue, left to right): used by the name, the big section headers and the project titles */
+  h1, .big-title, .card h3{
+    width:fit-content;margin-left:auto;margin-right:auto;
+    font-weight:600;letter-spacing:-0.01em;line-height:1.2;padding:0.05em 0;
+    color:#fff;
+    background-image:linear-gradient(-90deg, #fff 0%, var(--grad-end) 100%);
+    background-size:100% 100%;
+    background-repeat:no-repeat;
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+  h1{font-size:48px;margin-top:0;margin-bottom:-6px;}
+  .big-title{font-size:var(--title-size);margin-top:256px;margin-bottom:72px;}
+    .role {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 18px;
+        font-weight:500;
+        color: var(--text-muted);
+        letter-spacing: 0.12em;
+        text-transform:uppercase;
+    }
+
+  /* INTRO */
+  .about{margin-top:84px;text-align:center;}
+  .about .section-label{margin-top:0;margin-bottom:16px;}
+  .about p{font-size:18px;line-height:1.75;color:#fff;margin:0;}
+  .about p strong{font-weight:600;}
+
+  /* About Me: left-aligned text with the portrait to the right (stacks on narrow screens) */
+  .about-body{display:flex;flex-wrap:wrap;align-items:flex-start;gap:40px 56px;text-align:left;}
+  .about-text{flex:1 1 300px;min-width:0;}
+  .about-photo{flex:0 0 clamp(240px, 30%, 380px);margin:0;position:relative;overflow:hidden;border-radius:8px;border:1px solid var(--line);}
+  .about-photo img{display:block;width:100%;height:auto;aspect-ratio:4 / 5;object-fit:cover;object-position:50% 35%;}
+  /* Subtle light-blue glow in the bottom-left corner of the portrait */
+  .about-photo::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 120% 90% at 0% 100%, rgba(163,196,255,0.55) 0%, rgba(163,196,255,0) 65%);}
+  .project-note{font-size:18px;color:var(--text-muted);margin:0 0 24px;text-align:center;}
+  .stats{display:flex;flex-wrap:wrap;justify-content:center;gap:18px 40px;margin-top:-32px;}
+  .stat{display:flex;align-items:baseline;gap:14px;}
+    .stat .n {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 32px;
+        font-weight: 600;
+        color: #fff;
+        line-height: 1.1;
+    }
+    .stat .l {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 32px;
+        color: var(--text-muted);
+        letter-spacing: 0.06em;
+    }
+
+  /* Condensed lettering shared by the section labels and the "Extra" sub-headings */
+  .section-label, .merit h3{font-family:'DM Mono', monospace;font-size:18px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;}
+  .section-label{color:var(--text-muted);margin:72px 0 26px;text-align:center;}
+
+  /* SHARED EXPAND / COLLAPSE */
+  .panel{display:grid;grid-template-rows:0fr;visibility:hidden;transition:grid-template-rows .3s ease, visibility 0s linear .3s;}
+  .panel.open{grid-template-rows:1fr;visibility:visible;transition:grid-template-rows .3s ease, visibility 0s;}
+  .panel-inner{overflow:hidden;min-height:0;}
+  .chev{flex-shrink:0;transition:transform .25s ease;}
+  [aria-expanded="true"] .chev{transform:rotate(180deg);}
+  @media (prefers-reduced-motion: reduce){
+    .panel, .panel.open, .chev, .card, .card .desc.clamp, .card .desc.clamp::after{transition:none;}
+  }
+
+  /* SKILLS */
+    .skills {
+        margin-left: -24px;
+        margin-right: -24px;
+        padding-left: 24px;
+        padding-right: 24px;
+        border-top: 1px solid var(--line);
+    }
+    .skill {
+        margin-left: -24px;
+        margin-right: -24px;
+        padding-left: 24px;
+        padding-right: 24px;
+        border-bottom: 1px solid var(--line);
+    }
+  .skill-btn{
+    width:100%;display:flex;justify-content:space-between;align-items:center;gap:16px;
+    background:none;border:0;margin:0;padding:16px 2px;cursor:pointer;text-align:left;
+    font-family:inherit;font-size:18px;font-weight:600;color:var(--text);
+    transition:color .2s ease;
+  }
+  .skill-btn:hover, .skill-btn[aria-expanded="true"]{color:var(--accent);}
+    .skill-body {
+        font-size: 18px;
+        line-height: 1.7;
+        color: var(--text);
+        margin-right: 24px;
+        padding: 0 2px 0px;
+    }
+
+  .skill-group{margin-bottom:-12px; padding-left:96px; padding-right:96px;}
+  .group-title{font-size:18px;font-weight:600;margin:0 0 18px;color:var(--text);}
+  .big-title + .skill-group .section-label{margin-top:0;margin-bottom:28px;}
+
+  /* PROJECTS */
+  .entry{margin-top:78px; margin-bottom:-42px;margin-left:24px; margin-right:24px}
+  .entry:last-child{margin-bottom:24px;}
+  .card{
+    flex:1;min-width:0;background:var(--bg-panel);border:1px solid var(--line);border-radius:8px;
+    padding:20px 28px 24px;cursor:pointer;
+    transition:border-color .25s ease, transform .25s ease, box-shadow .25s ease;
+  }
+  .card:hover{border-color:var(--accent-dim);transform:translateY(-2px);box-shadow:0 12px 32px -14px rgba(0,0,0,0.6);}
+  .card h3{margin:0 0 8px;font-size:32px;}
+  .card h3 a{color:inherit;text-decoration:none;}
+  .card h3 a:hover{text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:6px;}
+
+  /* One shared gap: info row -> description -> "Click to learn more" */
+  .card{--block-gap:24px;}
+
+  /* Description preview: about 3 lines fully visible, then a fade into the panel colour.
+     The script adds .clamp only when a description is long enough to need it; shorter ones show in full.
+     Tweak --desc-lines (total visible lines, keep it a whole number so the cut-off lands exactly at the end of a line)
+     and --desc-fade (how many of those lines fade out). */
+  .card .desc{--desc-lines:5;--desc-fade:2;}
+  .card .desc.clamp{position:relative;overflow:hidden;max-height:calc(var(--desc-lines) * 1.6em);transition:max-height .3s ease;}
+  .card .desc.clamp::after{content:"";position:absolute;left:0;right:0;bottom:0;height:calc(var(--desc-fade) * 1.6em);background:linear-gradient(to bottom, transparent, var(--bg-panel) 90%);pointer-events:none;}
+  .card .desc.clamp.expanded{max-height:var(--full);}
+  .card .desc.clamp.expanded::after{opacity:0;transition:opacity .3s ease;}
+  /* Info row under the project title: engine, language, team, timeframe and anything extra */
+  .facts{margin:0;display:flex;flex-wrap:wrap;gap:12px 40px;}
+  .facts > div{display:flex;flex-direction:column;gap:2px;}
+  .facts dt{font-family:'DM Mono', monospace;font-size:18px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);}
+    .facts dd {
+        margin-left: 0px;
+        margin-bottom: var(--block-gap);
+        font-size: 18px;
+        line-height: 1.4;
+        color: var(--text-muted);
+    }
+  .card-foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px 24px;margin-top:var(--block-gap);}
+  .card-foot[hidden]{display:none;}
+  .more{
+    background:none;border:0;margin:0;padding:0;line-height:1.4;cursor:pointer;text-align:left;
+    font-family:'DM Mono', monospace;font-size:18px;color:var(--text-muted);
+    transition:color .2s ease;
+  }
+  .more .when-open{display:none;}
+  .more[aria-expanded="true"] .when-open{display:inline;}
+  .more[aria-expanded="true"] .when-closed{display:none;}
+  .card:hover .more, .more[aria-expanded="true"]{color:var(--accent);}
+  .card .desc{font-size:18px;line-height:1.6;color:var(--text);margin:0;}
+  .card .desc p{margin:0;}
+  .card .desc p + p{margin-top:1.6em;}
+  .detail{padding-top:16px;}
+  .detail p{font-size:18px;line-height:1.7;color:var(--text);margin:0 0 12px;}
+  .detail p:last-child{margin-bottom:0;}
+  .detail ul{margin:0 0 12px;padding-left:20px;font-size:18px;line-height:1.7;color:var(--text);}
+  .detail h4{font-size:18px;font-weight:600;color:var(--text);margin:16px 0 6px;}
+
+  /* ADDITIONAL */
+  .merit{margin-bottom:48px;text-align:center;}
+  .merit:last-child{margin-bottom:0;}
+  .merit h3{color:var(--text-muted);margin:0 0 14px;}
+  .merit p{font-size:18px;line-height:1.7;color:var(--text);margin:0;}
+  .langs{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:6px 28px;font-size:18px;line-height:1.7;color:var(--text);}
+  .langs span{color:var(--text-muted);}
+
+  /* INLINE LINKS: any <a> placed inside body text picks this up */
+  :is(.about, .skill-body, .desc, .detail, .merit) a{
+    color:var(--accent);text-decoration:underline;text-decoration-color:var(--accent-dim);
+    text-underline-offset:3px;transition:text-decoration-color .2s ease;
+  }
+  :is(.about, .skill-body, .desc, .detail, .merit) a:hover{text-decoration-color:var(--accent);}
+
+  /* FOOTER */
+  footer{margin-left:-24px;margin-right:-24px;margin-top:256px;padding-left:24px;padding-right:24px;padding-top:48px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 24px;color:var(--text);font-size:18px;}
+  .footer-links{display:flex;flex-wrap:wrap;gap:8px 24px;}
+  footer a{color:var(--accent);text-decoration:none;}
+  footer a:hover{text-decoration:underline;}
+
+  @media (max-width:600px){
+    .card{padding:18px 16px 20px;}
+  }
+</style>
+</head>
+<body>
+    <div class="wrap">
+
+        <header>
+            <h1>Patrick Gorzsás</h1>
+            <h3 class="role">Game Programmer</h3>
+        </header>
+
+        <section class="about" aria-label="Introduction">
+            <h2 class="section-label">About Me</h2>
+            <div class="about-body">
+                <div class="about-text">
+            <p>Hello! I am Patrick Gorzsás, and I am currently studying game programming at Futuregames in Umeå, Sweden. I have had an interest in games since a very young age. I remember being amazed watching my father play World of Warcraft and Diablo, and over the years that interest has developed into a passion for game development, and in particular game programming.</p>
+            <br />
+            <p>I first got introduced to game programming by my father when I was around ten years old, through the visual programming language of Scratch 2. Since that day, I have learned many programming languages, game engines, tools and development techniques. Through Futuregames, I have also had the opportunity to showcase my skills in several group projects in a more professional setting.</p>
+            <br />
+            <p>I have a strong, and perhaps unique mindset when it comes to game development. I do not believe a game can, or should even, appeal to everyone. I believe a game is at its best when it stands confidently for what it is, and fully delivers on its mechanics and design. This philosophy is something I have incorporated into many of the projects that I have been a part of, detailed in the coming sections.</p>
+                </div>
+                <figure class="about-photo">
+                    <img src="profile.jpg" alt="Portrait of Patrick Gorzsás" width="760" height="1013">
+                </figure>
+            </div>
+        </section>
+
+        <!-- SKILLS -->
+        <h2 class="big-title">My Experience</h2>
+        <!-- To add a skill: copy one whole <div class="skill"> ... </div> block into the list it belongs to, then change the name and the description.
+     To add a new list: copy a whole <div class="skill-group"> ... </div> block and change its title. -->
+
+        <div class="skill-group">
+            <h3 class="section-label">Languages</h3>
+            <div class="skills">
+
+                <div class="skill">
+                    <button class="skill-btn" aria-expanded="false">
+                        C++
+                        <svg class="chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 6 8.5 10 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </button>
+                    <div class="panel"><div class="panel-inner"><p class="skill-body">I learned C++ as part of my education at Futuregames, and it is currently the language I have the deepest knowledge of. I am very comfortable with using C++ in Unreal Engine 5, but I am also familiar with more low-level memory management and opimization techniques. C++ was the language me and my teammates used to develop Ghost Bureau of Investigation, an online multiplayer puzzle game, and our largest project at Futuregames.</p></div></div>
+                </div>
+
+                <div class="skill">
+                    <button class="skill-btn" aria-expanded="false">
+                        C#
+                        <svg class="chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 6 8.5 10 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </button>
+                    <div class="panel"><div class="panel-inner"><p class="skill-body">C# is another language I learned during my time at Futuregames, and I have used it across two team projects made in Unity 6: Echoes, a 2.5D speedrunning platformer, and Don't Feed the Ducks, a casual 3D mobile game. I am comfortable with object oriented programming, generic programming, interfaces, assemblies, and many common design patterns.</p></div></div>
+                </div>
+
+                <div class="skill">
+                    <button class="skill-btn" aria-expanded="false">
+                        GDScript
+                        <svg class="chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 6 8.5 10 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </button>
+                    <div class="panel"><div class="panel-inner"><p class="skill-body">GDScript is a language I learned on my own, and it was the language I used for all the programming in Beats Sync, my solo rhythm game made in Godot 3. I have explored almost every aspect of the language, and I am confident in using it for any type of game.</p></div></div>
+                </div>
+
+                <div class="skill">
+                    <button class="skill-btn" aria-expanded="false">
+                        Java
+                        <svg class="chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 6 8.5 10 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </button>
+                    <div class="panel"><div class="panel-inner"><p class="skill-body">I learned Java before starting my education at Futuregames, and I used it to learn how to build user interfaces for various applications. Though I only have limited knowledge of the language, it is very similar to C#, so learning more of it if required would go quickly.</p></div></div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="skill-group">
+            <h3 class="section-label">Engines</h3>
+            <div class="skills">
+
+                <div class="skill">
+                    <button class="skill-btn" aria-expanded="false">
+                        Unreal Engine
+                        <svg class="chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 6 8.5 10 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </button>
+                    <div class="panel"><div class="panel-inner"><p class="skill-body">I learned Unreal Engine 5 at Futuregames through many solo assignments, as well as two team projects. I am comfortable with using the engine's gameplay and animation frameworks, networking features, materials, shaders and post-process effects, widget systems, plugins, and C++ and Blueprint interaction. I also regularly use the engine to create hobby projects outside of my education.</p></div></div>
+                </div>
+
+                <div class="skill">
+                    <button class="skill-btn" aria-expanded="false">
+                        Unity
+                        <svg class="chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 6 8.5 10 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </button>
+                    <div class="panel"><div class="panel-inner"><p class="skill-body">I have used Unity 6 for two team projects at Futuregames: Echoes, and Don't Feed the Ducks. These projects taught me the engine's composition model and component system, mobile development and deployment, and how to structure a project using C# assemblies to reduce compile times. In particular, I have focused on how to use the engine's physics and user interface systems.</p></div></div>
+                </div>
+
+                <div class="skill">
+                    <button class="skill-btn" aria-expanded="false">
+                        Godot
+                        <svg class="chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 6 8.5 10 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </button>
+                    <div class="panel"><div class="panel-inner"><p class="skill-body">I used Godot 3 to build Beats Sync, a solo shader and effects-heavy rhythm game with an in-game level editor. Building it taught me how to design game architecture and tooling myself, including level editing, and saving and loading, especially for file formats that are not natively supported by the engine. I am confident with using both GDScript and C# to develop games in Godot, and I have spent additional effort exploring the engine's control nodes to create all kinds of user interfaces.</p></div></div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="skill-group">
+            <h3 class="section-label">Focus Areas</h3>
+            <div class="skills">
+
+                <div class="skill">
+                    <button class="skill-btn" aria-expanded="false">
+                        User Interfaces
+                        <svg class="chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 6 8.5 10 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </button>
+                    <div class="panel"><div class="panel-inner"><p class="skill-body">I have always had a particular interest in user interfaces, and what makes them intuitive and pretty. The user experience has been a big part of all of my solo projects, and I have made sure to explore the tools for creating user interfaces in each engine I use. Though I am most comfortable with the widget systems in Unreal Engine 5, I can build almost any kind of user interface in Unity 6 and Godot 3 and 4 as well.</p></div></div>
+                </div>
+
+                <div class="skill">
+                    <button class="skill-btn" aria-expanded="false">
+                        Shaders
+                        <svg class="chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 6 8.5 10 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </button>
+                    <div class="panel"><div class="panel-inner"><p class="skill-body">I first learned shader programming through Godot's native shading language during the development of my solo project Beats Sync. Since then, I have also learned shader programming as part of a course at Futuregames, focusing on the material graph in Unreal Engine 5, and how to use it to create various surface and post-process materials. I can implement many common shading techniques, such as triplanar sampling, palette sampling, vertex displacement, and CPU to GPU interaction. Additionally, I have basic knowledge of HLSL and GLSL shaders.</p></div></div>
+                </div>
+
+                <div class="skill">
+                    <button class="skill-btn" aria-expanded="false">
+                        Multiplayer
+                        <svg class="chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 6 8.5 10 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </button>
+                    <div class="panel"><div class="panel-inner"><p class="skill-body">I learned about networking and multiplayer games in Unreal Engine 5 mainly through the Ghost Bureau of Investigation team project that I was a part of at Futuregames. It is my first hands-on experience with multiplayer game development, and how to manage player and game state, set up a lobby system, and implement server travel mechanics. I have also created several smaller multiplayer projects in Scratch 3, using the website's cloud variable system.</p></div></div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="skill-group">
+            <h3 class="section-label">Tools</h3>
+            <!-- Add more tools (Perforce, Inkscape, ...) by copying the Git block below -->
+            <div class="skills">
+
+                <div class="skill">
+                    <button class="skill-btn" aria-expanded="false">
+                        Perforce
+                        <svg class="chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 6 8.5 10 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </button>
+                    <!-- Edit this description so it matches how you actually use Git -->
+                    <div class="panel"><div class="panel-inner"><p class="skill-body">Perforce has been the version control tool of choice for nearly all of my projects at Futuregames. I am familiar with the standard workflow, and can easily work alongside many teammates during a project in both Unreal Engine and Unity.</p></div></div>
+                </div>
+
+                <div class="skill">
+                    <button class="skill-btn" aria-expanded="false">
+                        Git
+                        <svg class="chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 6 8.5 10 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </button>
+                    <!-- Edit this description so it matches how you actually use Git -->
+                    <div class="panel"><div class="panel-inner"><p class="skill-body">Git was the version control tool me and my teammates used via GitHub desktop during the development of Terminal blonde, our final team project at Futuregames. Additionally, I have used git for a small test project in Godot to familiarize myself more with the tool's features and workflow.</p></div></div>
+                </div>
+
+                <div class="skill">
+                    <button class="skill-btn" aria-expanded="false">
+                        Blender
+                        <svg class="chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 6 8.5 10 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </button>
+                    <!-- Edit this description so it matches how you actually use Git -->
+                    <div class="panel"><div class="panel-inner"><p class="skill-body">I use blender regularly to create 3D assets for my hobby projects, whether it be rigged characters with animations, or simple static objects. I am familiar with box and subdivision modeling, rigging, animation, texture painting, UV-mapping, compositing and the shader graph.</p></div></div>
+                </div>
+
+                <div class="skill">
+                    <button class="skill-btn" aria-expanded="false">
+                        Inkscape
+                        <svg class="chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 6 8.5 10 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </button>
+                    <!-- Edit this description so it matches how you actually use Git -->
+                    <div class="panel"><div class="panel-inner"><p class="skill-body">Inkscape is my tool of choice for creating any 2D graphics, whether it be for game assets or user interfaces. I am familiar with a large portion of the tools in the software, and used it for a majority of the graphics in my project Beats Sync.</p></div></div>
+                </div>
+
+                <div class="skill">
+                    <button class="skill-btn" aria-expanded="false">
+                        FL Studio
+                        <svg class="chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 6 8.5 10 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </button>
+                    <!-- Edit this description so it matches how you actually use Git -->
+                    <div class="panel"><div class="panel-inner"><p class="skill-body">I have used FL Studio, in particular FL Studio 20, for several years. Before settling on game programming, I was set on becoming a musician, so I have explored a majority of the software, and I can create both music and sound effects for games. I have experience with mixing and mastering, most of the stock plugins, and many other professional plugins such as Serum 1 and 2, Addictive Keys, Kontakt, the Ozone 9 series, and most FabFilter plugins.</p></div></div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <!-- PROJECTS -->
+        <h2 class="big-title">My Projects</h2>
+        <div class="merit"><h3>Ordered by Recency</h3></div>
+        <div class="stats">
+            <div class="stat"><div class="n">5</div><div class="l">Shipped</div></div>
+            <div class="stat"><div class="n">1</div><div class="l">Prototyped</div></div>
+        </div>
+        <div class="timeline">
+
+            <div class="entry">
+                <article class="card">
+                    <h3><a href="https://futuregames.itch.io/terminalblonde" target="_blank" rel="noopener noreferrer">Terminal Blonde</a></h3>
+                    <dl class="facts">
+                        <div><dd>Unreal Engine 5 ・ C++, Blueprints ・ PC ・ 10 People ・ 4 Weeks</dd></div>
+                    </dl>
+                    <!-- Description: put each paragraph in its own <p> inside this div. The whole block is cut off after a few lines with a fade and expands when the card is clicked. -->
+                    <div class="desc">
+                        <p>A puzzle game inspired by Scrutinized where you scam people online.</p>
+                        <p>This game was my fourth game project at Futuregames. I took the role as lead programmer, supervising the development of new features and dividing up work between the programming team. I was also responsible for creating most of the user interface for the in-game computer, including things such as desktop icons, windows, and a web browser.</p>
+                        <p>I learned a lot about the widget systems in Unreal Engine 5, and how to create more advanced custom elements, such as custom scroll bars, buttons, and containers. In general, the game is very systems-heavy, so learning how to implement many features in a short amount of time was a key takeaway. Due to the time constraints, I was also forced to familiarize myself with the engine's Blueprint system a lot more, which is a powerful tool I will be sure to continue using in any future projects when possible.</p>
+                        <p>Additionally, this was the first big project I worked on that used Git and GitHub Desktop as the main tools for version control. It was definitely a big change from Perforce, as we never used different branches and the accompanying merging features of Perforce, but I was able to adapt to the new workflow rather quickly.</p>
+                    </div>
+                    <div class="card-foot">
+                        <button class="more" aria-expanded="false"><span class="when-closed">Click to show more.</span><span class="when-open">Click to show less.</span></button>
+                    </div>
+                </article>
+            </div>
+
+            <div class="entry">
+                <article class="card">
+                    <h3><a href="https://futuregames.itch.io/gbi" target="_blank" rel="noopener noreferrer">Ghost Bureau of Investigation</a></h3>
+                    <dl class="facts">
+                        <div><dd>Unreal Engine 5 ・ C++, Blueprints ・ PC ・ 10 People (International) ・ 8 Weeks</dd></div>
+                    </dl>
+                    <div class="desc">
+                        <p>A spooky online multiplayer puzzle game. Created with an international team split between Sweden and Poland.</p>
+                        <p>This was my third game project at Futuregames, and it is the biggest one to date. It was also the first time I used Unreal Engine 5 in a more professional team setting. This was a rather unique project, as we had an international team working on the game, so learning how to communicate effectively, and to properly manage tasks was an important part of this project.</p>
+                        <p>This time around, I was mainly a network programmer, implementing the game's lobby system, character selection system, and server travel mechanics, which involved both C++ and Blueprint code. This was definitely the most challenging game project, as I was not familiar with networked games or the replication system in Unreal Engine 5 prior to this point. After finishing the game, however, I felt much more confident, and I had learned a lot.</p>
+                        <p>In particular, my biggest takeaways from this project were figuring out how replicated components, functions, and variables work, and especially the importance of server authority and proper project structuring, so the right data always lives in the right class.</p>
+                        <p></p>
+                    </div>
+                    <div class="card-foot">
+                        <button class="more" aria-expanded="false"><span class="when-closed">Click to show more.</span><span class="when-open">Click to show less.</span></button>
+                    </div>
+                </article>
+            </div>
+
+            <div class="entry">
+                <article class="card">
+                    <h3><a href="https://futuregames.itch.io/dont-feed-the-ducks" target="_blank" rel="noopener noreferrer">Don't Feed the Ducks</a></h3>
+                    <dl class="facts">
+                        <div><dd>Unity 6 ・ C# ・ Mobile ・ 10 People ・ 4 Weeks</dd></div>
+                    </dl>
+                    <div class="desc">
+                        <p>A 3D mobile game about feeding hazardous foods to ducks and watching them mutate.</p>
+                        <p>This is, in my opinion, my best game project at Futuregames. The entire team, both designers and programmers, did an excellent job with their respective tasks, and we ended up with a very cohesive and chill 3D mobile game. My job was implementing player input, which was somewhat challenging due to it being a mobile game, a platform I had never worked with before, the AI and pathfinding systems for the ducks, the duck mutation system, and the physics for the various throwable food items.</p>
+                        <p>My experience from the previous game project was invaluable here, as I was much more comfortable working with Unity, and implementing the relatively complex behaviour of the ducks and their mutations would not have been possible otherwise. A very important takeaway from this project was to not underestimate my teammates, as I worked on a rather large portion of the game by myself, in fear of others not finishing in time. This is something I made sure to keep in mind during the rest of my game projects at Futuregames, and I believe it had a positive outcome.</p>
+                    </div>
+                    <div class="card-foot">
+                        <button class="more" aria-expanded="false"><span class="when-closed">Click to show more.</span><span class="when-open">Click to show less.</span></button>
+                    </div>
+                </article>
+            </div>
+
+            <div class="entry">
+                <article class="card">
+                    <h3><a href="https://futuregames.itch.io/echoes" target="_blank" rel="noopener noreferrer">Echoes</a></h3>
+                    <dl class="facts">
+                        <div><dd>Unity 6 ・ C# ・ PC ・ 8 People ・ 3 Weeks</dd></div>
+                    </dl>
+                    <div class="desc">
+                        <p>A 2.5D speedrunning platformer game. The first team project I was a part of at Futuregames.</p>
+                        <p>This is the first team project I have ever been a part of, and I am relatively pleased with how it went. Since I had never worked in a team before, I learned a lot about communication and the importance of keeping track of what everyone is working on, so the development could move forward effectively. This was also the first time I had used any version control tool, in this instance we used Perforce, so there was a rather large learning curve there too.</p>
+                        <p>During the development process, I was tasked with implementing player movement, and a replay system, since this is a speedrunning game where the goal is beating your personal best time. Luckily, I had already made many platforming games during my time programming in Scratch, so I was fully prepared for this. Despite the innumerable challenges of working in an unfamiliar engine, and with an unfamiliar team, everything worked out in the end, and we ended up with a decently fun, although somewhat short, playable game.</p>
+                    </div>
+                    <div class="card-foot">
+                        <button class="more" aria-expanded="false"><span class="when-closed">Click to show more.</span><span class="when-open">Click to show less.</span></button>
+                    </div>
+                </article>
+            </div>
+
+            <div class="entry">
+                <article class="card">
+                    <h3><a href="https://www.youtube.com/watch?v=Q6uIPHOhVyo" target="_blank" rel="noopener noreferrer">Beats Sync</a></h3>
+                    <dl class="facts">
+                        <div><dd>Godot 3 ・ GDScript ・ PC ・ Solo ・ 4 Months</dd></div>
+                    </dl>
+                    <div class="desc">
+                        <p>A 2D shader and effects-heavy rhythm game inspired by Thumper and Piano Tiles 2.</p>
+                        <p>This is actually the project I am the most proud of. It was my graduation project at the end of upper secondary school, and it was also my first time using a game engine and writing shader code. This project is a combination of three things that have had a huge influence on my life.</p>
+                        <p>First of all, I am a big fan of the rhythm game Thumper, released by Drool. Not only is the gameplay and design fantastic, but it was developed by just two people, only one of whom is a programmer, and it was built in a completely custom engine. Secondly, I took inspiration from Piano Tiles 2, a very famous mobile rhythm game, which I actually held multiple world records for in the past. And finally, I am a huge fan of the very specific gritty, energetic, but still emotional vibe of the hardstyle music genre, specifically between the years of 2010 to 2015. It is something that can not really be described or compared to anything else.</p>
+                        <p>I wanted to combine these three elements into one game that represents me as a person, and I truly think that this is as close as I could have gotten with the time I had. I learned so much about game architecture, shaders, save and load systems, tooling, level editors, and programming as a whole through building this project.</p>
+                        <p>However, the game is still technically a prototype, as there are areas of the level editor that are not entirely finished, and there is only one built-in level. The game was also supposed to be 3D, just like thumper, but I had to settle for 2D, as I knew too little about programming to be able to create something in 3D at the time. Due to these factors, there is no public playable version of the game yet, as this is a project that I am very passionate about, and I want to do it justice by releasing a proper version, the way the game was originally envisioned, once I finish it.</p>
+                    </div>
+                    <div class="card-foot">
+                        <button class="more" aria-expanded="false"><span class="when-closed">Click to show more.</span><span class="when-open">Click to show less.</span></button>
+                    </div>
+                </article>
+            </div>
+
+            <div class="entry">
+                <article class="card">
+                    <h3><a href="https://turbowarp.org/697501355/fullscreen?fps=60&clones=Infinity&offscreen&limitless&size=256x240" target="_blank" rel="noopener noreferrer">NES Tetris</a></h3>
+                    <dl class="facts">
+                        <div><dd>Scratch 3 ・ GDScript ・ PC ・ Solo ・ 6 Months</dd></div>
+                    </dl>
+                    <div class="desc">
+                        <p>A recreation of NES Tetris, reproducing the original game's exact mechanics.</p>
+                        <p>This was the project that really made me want to pursue game programming as a career. The feeling of figuring out exactly how something works, and why it works in that way, is something I enjoy a lot. I had to do research on every part of the original game, and how all the assembly instructions for the NES console's processor work, in order to be able to faithfully recreate it. Every feature, and every bug from the original game, is present here.</p>
+                        <p>I also drew every texture, and recreated every animation by hand, through watching youtube videos, and studying online wikis. The result is, to my knowledge, the only truly accurate recreation of Tetris on the Scratch website to date, which is something I am incredibly proud of. As a bonus, I also added in many of the most popular Game Genie codes as toggleable settings into the game.</p>
+                        <p>However, after having finished the coding, I still did not feel that the project was completely finished. I had been interested in competitive classic Tetris for a long time, so as a long-running side project spanning roughly 4 years, I attempted to reach the maximum possible score on my version of the game. After roughly 800 hours of playtime, I finally reached 999,999 points on August 4th, 2026, marking the true end of this project.</p>
+                    </div>
+                    <div class="card-foot">
+                        <button class="more" aria-expanded="false"><span class="when-closed">Click to show more.</span><span class="when-open">Click to show less.</span></button>
+                    </div>
+                </article>
+            </div>
+
+        </div>
+
+        <!-- ADDITIONAL -->
+        <h2 class="big-title">Extra</h2>
+        <div class="merit">
+            <h3>Spoken Languages</h3>
+            <ul class="langs">
+                <li>Swedish <span>(native)</span></li>
+                <li>English <span>(fluent)</span></li>
+                <li>Hungarian <span>(fluent)</span></li>
+                <li>Spanish <span>(basic)</span></li>
+            </ul>
+        </div>
+        <div class="merit">
+            <h3>Gaming</h3>
+            <p>Recently ranked top 500 globally and top 3 in Sweden in Geometry Dash.</p>
+            <p>Custom level with 30,000+ downloads featured in-game by the developer of Geometry Dash.</p>
+            <p>Formerly held several world records for Piano Tiles 2 on mobile.</p>
+        </div>
+
+        <footer>
+            <span>Umeå, Sweden</span>
+            <div class="footer-links">
+                <a href="mailto:patrick.gorzsas@gmail.com">Email</a>
+                <!-- Replace REPLACE-ME with your LinkedIn profile name -->
+                <a href="https://www.linkedin.com/in/patrick-gorzsas" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            </div>
+        </footer>
+
+    </div>
+
+  <script>
+    (function () {
+      var uid = 0;
+      // Finds the panel that belongs to a skill/card and links the button to it (no ids needed in the markup)
+      function link(btn, scope) {
+        var panel = scope.querySelector('.panel');
+        if (!panel.id) panel.id = 'panel-' + (++uid);
+        btn.setAttribute('aria-controls', panel.id);
+        return panel;
+      }
+      function isOpen(btn) { return btn.getAttribute('aria-expanded') === 'true'; }
+      function setOpen(btn, panel, open) {
+        btn.setAttribute('aria-expanded', String(open));
+        panel.classList.toggle('open', open);
+      }
+
+      // Skills: click the row
+      document.querySelectorAll('.skill').forEach(function (skill) {
+        var btn = skill.querySelector('.skill-btn');
+        var panel = link(btn, skill);
+        btn.addEventListener('click', function () { setOpen(btn, panel, !isOpen(btn)); });
+      });
+
+      // Projects: click anywhere on the card (links and text selection are left alone).
+      // Only cards whose description is long enough to be cut off can expand; for the others the "Click to learn more" row is hidden.
+      var cards = [];
+      document.querySelectorAll('.card').forEach(function (card) {
+        var btn = card.querySelector('.more');
+        var desc = card.querySelector('.desc');
+        var foot = card.querySelector('.card-foot');
+        if (!btn || !desc) return;
+        if (!desc.id) desc.id = 'desc-' + (++uid);
+        btn.setAttribute('aria-controls', desc.id);
+        var title = card.querySelector('h3');
+        if (title) { if (!title.id) title.id = 'title-' + (++uid); btn.setAttribute('aria-describedby', title.id); }
+        cards.push({ btn: btn, desc: desc, foot: foot });
+        card.addEventListener('click', function (e) {
+          if (e.target.closest('a')) return;
+          if (!desc.classList.contains('clamp')) return;
+          if (String(window.getSelection()).length) return;
+          var open = !isOpen(btn);
+          btn.setAttribute('aria-expanded', String(open));
+          desc.classList.toggle('expanded', open);
+        });
+      });
+
+      // Description preview: only descriptions taller than the preview height get the fade
+      function measure(c) {
+        var desc = c.desc;
+        var wasExpanded = desc.classList.contains('expanded');
+        desc.style.transition = 'none';
+        desc.classList.remove('expanded');
+        desc.classList.add('clamp');
+        desc.style.removeProperty('--full');
+        var needs = desc.scrollHeight > desc.clientHeight + 1;
+        if (needs) {
+          desc.style.setProperty('--full', desc.scrollHeight + 'px');
+          if (wasExpanded) desc.classList.add('expanded');
+        } else {
+          desc.classList.remove('clamp');
+          c.btn.setAttribute('aria-expanded', 'false');
+        }
+        if (c.foot) c.foot.hidden = !needs;
+        void desc.offsetHeight;
+        desc.style.transition = '';
+      }
+      function measureAll() { cards.forEach(measure); }
+      measureAll();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(measureAll);
+      var resizeTimer;
+      window.addEventListener('resize', function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(measureAll, 150); });
+    })();
+  </script>
+</body>
+</html>
